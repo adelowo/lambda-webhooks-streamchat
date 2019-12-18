@@ -8,12 +8,26 @@ import {
 } from 'stream-chat-react-native';
 
 export default class ChatView extends Component {
+  state = {
+    isReady: false,
+  };
+
   render() {
     const channel = this.props.chatClient.channel(
       'messaging',
-      'lambda-webhook-chat'
+      'lambda-webhook-chat',
+      {
+        name: 'Webhook server',
+      }
     );
-    channel.watch();
+
+    channel.watch().then(() => {
+      this.setState({isReady: true});
+    });
+
+    if (!this.state.isReady) {
+      return <Chat client={this.props.chatClient} />;
+    }
 
     return (
       <Chat client={this.props.chatClient}>

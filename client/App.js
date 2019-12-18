@@ -1,5 +1,6 @@
 import React, {Fragment, Component} from 'react';
 import {StreamChat} from 'stream-chat';
+import axios from 'axios';
 import {
   TouchableOpacity,
   Text,
@@ -20,7 +21,7 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
-    this.chatClient = new StreamChat('9agc4x9dmrft');
+    this.chatClient = new StreamChat('5ru3vgh26prc');
   }
 
   handleSignin = () => {
@@ -29,31 +30,66 @@ export default class App extends Component {
       return;
     }
 
-    // Use lambda for the authentication and token retrieval.
-    this.chatClient.setGuestUser({id: this.state.username}).then(() => {
-      this.setState({isAuthenticated: true});
-    });
+    axios
+      .post('http://localhost:3000/users/create', {
+        username: this.state.username,
+      })
+      .then(res => {
+        if (res.data.status) {
+          this.chatClient
+            .setUser(
+              {
+                id: res.data.user_id,
+                username: this.state.username,
+                image:
+                  'https://stepupandlive.files.wordpress.com/2014/09/3d-animated-frog-image.jpg',
+                role: 'moderator',
+              },
+              res.data.token
+            )
+            .then(() => {
+              axios
+                .post('http://localhost:3000/users/add_member', {
+                  username: this.state.username,
+                })
+                .then(() => {
+                  this.setState({isAuthenticated: true});
+                });
+            });
+          return;
+        }
+
+        Alert.alert('Authentication', 'Could not authenticate you. Try again');
+      })
+      .catch(err => {
+        console.log(err);
+        Alert.alert(
+          'Authentication',
+          'An error occurred while authenticating you. Try again'
+        );
+      });
   };
 
   render() {
+    if (this.state.isAuthenticated) {
+      return (
+        <ChatView chatClient={this.chatClient} username={this.state.username} />
+      );
+    }
     return (
       <View style={styles.container}>
-        {this.state.isAuthenticated ? (
-          <ChatView chatClient={this.chatClient} />
-        ) : (
-          <Fragment>
-            <TextInput
-              style={styles.input}
-              value={this.state.username}
-              onChangeText={username => this.setState({username})}
-              placeholder={'Please provide your username'}
-              style={styles.input}
-            />
-            <TouchableOpacity style={styles.button} onPress={this.handleSignin}>
-              <Text style={{textAlign: 'center', height: 20}}>Login</Text>
-            </TouchableOpacity>
-          </Fragment>
-        )}
+        <Fragment>
+          <TextInput
+            style={styles.input}
+            value={this.state.username}
+            onChangeText={username => this.setState({username})}
+            placeholder={'Please provide your username'}
+            style={styles.input}
+          />
+          <TouchableOpacity style={styles.button} onPress={this.handleSignin}>
+            <Text style={{textAlign: 'center', height: 20}}>Login</Text>
+          </TouchableOpacity>
+        </Fragment>
       </View>
     );
   }
