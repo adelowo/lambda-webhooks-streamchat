@@ -4,6 +4,7 @@
   "description": "",
   "main": "handler.js",
   "dependencies": {
+    "@slack/webhook": "^5.0.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "serverless-http": "^2.3.0",

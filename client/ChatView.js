@@ -21,13 +21,13 @@ export default class ChatView extends Component {
       }
     );
 
-    channel.watch().then(() => {
-      this.setState({isReady: true});
-    });
+    // channel.watch().then(() => {
+    //   this.setState({isReady: true});
+    // });
 
-    if (!this.state.isReady) {
-      return <Chat client={this.props.chatClient} />;
-    }
+    // if (!this.state.isReady) {
+    //   return <Chat client={this.props.chatClient} />;
+    // }
 
     return (
       <Chat client={this.props.chatClient}>

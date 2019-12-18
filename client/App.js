@@ -43,7 +43,6 @@ export default class App extends Component {
                 username: this.state.username,
                 image:
                   'https://stepupandlive.files.wordpress.com/2014/09/3d-animated-frog-image.jpg',
-                role: 'moderator',
               },
               res.data.token
             )
