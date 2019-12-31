@@ -64,24 +64,13 @@ app.post('/users/add_member', (req, res) => {
 });
 
 app.post('/hook', (req, res) => {
-  const valid = client.verifyWebhook(
-    JSON.stringify(req.body),
-    req.headers['x-signature']
-  );
-
-  if (!valid) {
-    res.status(403);
-    res.send({
-      status: false,
-    });
-    return;
+  if (req.body.type === 'message.new') {
+    (async () => {
+      await webhook.send({
+        text: 'A new message was sent',
+      });
+    })();
   }
-
-  (async () => {
-    await webhook.send({
-      text: 'This webhook has been published to the slack channel',
-    });
-  })();
 
   res.status(200);
   res.send({
