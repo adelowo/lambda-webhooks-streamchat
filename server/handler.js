@@ -3,7 +3,6 @@
 const serverless = require('serverless-http');
 const express = require('express');
 const bodyParser = require('body-parser');
-const uuidv4 = require('uuid/v4');
 const StreamChat = require('stream-chat').StreamChat;
 const { IncomingWebhook } = require('@slack/webhook');
 
@@ -78,4 +77,4 @@ app.post('/hook', (req, res) => {
   });
 });
 
-module.exports.handler = serverless(app);
+module.exports.hello = serverless(app);
