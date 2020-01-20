@@ -4,16 +4,11 @@ const serverless = require('serverless-http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const StreamChat = require('stream-chat').StreamChat;
-const { IncomingWebhook } = require('@slack/webhook');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-const url = process.env.SLACK_WEBHOOK_URL;
-
-const webhook = new IncomingWebhook(url);
 
 const client = new StreamChat(process.env.API_KEY, process.env.API_SECRET);
 
@@ -60,21 +55,6 @@ app.post('/users/add_member', (req, res) => {
       console.log(err);
       res.status(200).send({ status: false });
     });
-});
-
-app.post('/hook', (req, res) => {
-  if (req.body.type === 'message.new') {
-    (async () => {
-      await webhook.send({
-        text: 'A new message was sent',
-      });
-    })();
-  }
-
-  res.status(200);
-  res.send({
-    status: true,
-  });
 });
 
 module.exports.hello = serverless(app);

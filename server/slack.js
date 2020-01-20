@@ -8,6 +8,8 @@ module.exports.slack = async (context, event, callback) => {
   });
 
   callback(null, {
-    status: true,
+    statusCode: 201,
+    headers: { 'Content-Type': 'text/json' },
+    body: JSON.stringify({ status: true }),
   });
 };
