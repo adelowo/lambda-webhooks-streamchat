@@ -1,0 +1,34 @@
+org: adelowomailbox
+app: server-app
+
+service: webhook-server
+provider:
+  name: aws
+  runtime: nodejs12.x
+  environment:
+    API_KEY: STREAMCHAT_API_KEY
+    API_SECRET: STREAMCHAT_API_SECRET
+    SLACK_WEBHOOK_URL: SLACK_WEBHOOK_URL
+
+functions:
+  hello:
+    handler: handler.hello
+#    The following are a few example events you can configure
+#    NOTE: Please make sure to change your handler code to work with those events
+#    Check the event documentation for details
+    events:
+      - http:
+          path: users/create
+          method: post
+
+      - http:
+          path: users/add_member
+          method: post
+
+  slack:
+    handler: slack.slack
+    events:
+      - http:
+          path: /hook
+          method: post
+
