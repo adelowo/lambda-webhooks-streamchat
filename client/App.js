@@ -31,9 +31,12 @@ export default class App extends Component {
     }
 
     axios
-      .post('http://localhost:3000/users/create', {
-        username: this.state.username,
-      })
+      .post(
+        'https://tiz4bp4q4i.execute-api.us-east-1.amazonaws.com/dev/users/create',
+        {
+          username: this.state.username,
+        }
+      )
       .then(res => {
         if (res.data.status) {
           this.chatClient
@@ -48,9 +51,12 @@ export default class App extends Component {
             )
             .then(() => {
               axios
-                .post('http://localhost:3000/users/add_member', {
-                  username: this.state.username,
-                })
+                .post(
+                  'https://tiz4bp4q4i.execute-api.us-east-1.amazonaws.com/dev/users/add_member',
+                  {
+                    username: this.state.username,
+                  }
+                )
                 .then(() => {
                   this.setState({isAuthenticated: true});
                 });
